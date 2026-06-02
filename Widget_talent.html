@@ -1,22 +1,23 @@
-%%writefile Widget_talent.html
+<!-- ================== URL FIXA (no canvia) ================== -->
+<script>
+  const NGROK_URL = "https://unsatisfiable-unwhitewashed-despina.ngrok-free.dev";
+</script>
+<!-- ============================================================ -->
 
 <button onclick="toggleChat()" style="position:fixed;bottom:20px;right:20px;width:65px;height:65px;border-radius:50%;background:#2563eb;color:white;border:none;font-size:28px;box-shadow:0 5px 15px rgba(0,0,0,0.3);z-index:10000;cursor:pointer;">
   💬
 </button>
 
 <div id="chat-widget" style="display:none; position:fixed; bottom:95px; right:20px; width:380px; height:520px; background:white; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.25); overflow:hidden; z-index:9999; flex-direction:column;">
-  <div style="background:#2563eb; color:white; padding:16px; font-weight:bold; font-size:16px;">XatBot Talent - Sergi Villanueva</div>
+  <div style="background:#2563eb; color:white; padding:16px; font-weight:bold;">XatBot Talent - Sergi Villanueva</div>
   <div id="chat-messages" style="flex:1; padding:15px; overflow-y:auto; background:#f8fafc;"></div>
   <div style="padding:12px; border-top:1px solid #ddd; display:flex; gap:8px;">
-    <input type="text" id="user-input" placeholder="Escriu el teu missatge..." style="flex:1; padding:12px; border:1px solid #ccc; border-radius:25px; font-size:15px;">
+    <input type="text" id="user-input" placeholder="Escriu el teu missatge..." style="flex:1; padding:12px; border:1px solid #ccc; border-radius:25px;">
     <button onclick="sendMessage()" style="background:#2563eb; color:white; border:none; padding:0 22px; border-radius:25px; cursor:pointer;">Enviar</button>
   </div>
 </div>
 
 <script>
-  // === IMPORTANT: ACTUALITZA AQUESTA URL ===
-  const NGROK_URL = "https://unsatisfiable-unwhitewashed-despina.ngrok-free.dev";
-
   function toggleChat() {
     const widget = document.getElementById('chat-widget');
     widget.style.display = widget.style.display === 'flex' ? 'none' : 'flex';
@@ -36,10 +37,14 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: message })
       });
+      
+      if (!res.ok) throw new Error("Error del servidor");
+      
       const data = await res.json();
       addMessage(data.reply, 'bot');
     } catch(e) {
-      addMessage("Error de connexió. Assegura't que el Colab estigui executant-se.", 'bot');
+      console.error(e);
+      addMessage("❌ Error de connexió. Assegura't que el Colab estigui executant-se.", 'bot');
     }
   }
 
