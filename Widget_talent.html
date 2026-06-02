@@ -14,7 +14,8 @@
 </div>
 
 <script>
-  const NGROK_URL = "https://unsatisfiable-unwhitewashed-despina.ngrok-free.dev";   // ← Canvia cada vegada!
+  // === IMPORTANT: ACTUALITZA AQUESTA URL ===
+  const NGROK_URL = "https://unsatisfiable-unwhitewashed-despina.ngrok-free.dev";
 
   function toggleChat() {
     const widget = document.getElementById('chat-widget');
@@ -38,7 +39,7 @@
       const data = await res.json();
       addMessage(data.reply, 'bot');
     } catch(e) {
-      addMessage("Error de connexió. Comprova que el Colab estigui executant.", 'bot');
+      addMessage("Error de connexió. Assegura't que el Colab estigui executant-se.", 'bot');
     }
   }
 
