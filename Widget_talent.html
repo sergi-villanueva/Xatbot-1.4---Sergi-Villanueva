@@ -1,1 +1,62 @@
+<!-- Widget_talent.html -->
+<button onclick="toggleChat()" style="position:fixed;bottom:20px;right:20px;width:65px;height:65px;border-radius:50%;background:#2563eb;color:white;border:none;font-size:30px;box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:10000;cursor:pointer;">
+  💬
+</button>
 
+<div id="chat-widget" style="display:none;position:fixed;bottom:90px;right:20px;width:380px;height:520px;background:white;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.25);overflow:hidden;z-index:9999;flex-direction:column;">
+  <div style="background:#2563eb;color:white;padding:15px;font-weight:bold;">XatBot Talent - Sergi Villanueva</div>
+  <div id="chat-messages" style="flex:1;padding:15px;overflow-y:auto;background:#f8fafc;"></div>
+  <div style="padding:12px;border-top:1px solid #ddd;display:flex;">
+    <input type="text" id="user-input" placeholder="Escriu el teu missatge..." style="flex:1;padding:12px;border:1px solid #ccc;border-radius:25px;">
+    <button onclick="sendMessage()" style="margin-left:8px;background:#2563eb;color:white;border:none;padding:12px 20px;border-radius:25px;">Enviar</button>
+  </div>
+</div>
+
+<script>
+  const NGROK_URL = "https://teu-ngrok-url.ngrok-free.app"; // ← Canvia cada vegada que reiniciïs Colab
+
+  function toggleChat() {
+    const w = document.getElementById('chat-widget');
+    w.style.display = w.style.display === 'flex' ? 'none' : 'flex';
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById('user-input');
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    addMessage(msg, 'user');
+    input.value = '';
+
+    try {
+      const res = await fetch(`${NGROK_URL}/chat`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message: msg})
+      });
+      const data = await res.json();
+      addMessage(data.reply, 'bot');
+    } catch(e) {
+      addMessage("Error de connexió. Comprova que el Colab estigui executant-se.", 'bot');
+    }
+  }
+
+  function addMessage(text, sender) {
+    const container = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.style.margin = '10px 0';
+    div.style.padding = '12px 16px';
+    div.style.borderRadius = '18px';
+    div.style.maxWidth = '85%';
+    div.style.background = sender === 'user' ? '#2563eb' : '#e2e8f0';
+    div.style.color = sender === 'user' ? 'white' : 'black';
+    div.style.alignSelf = sender === 'user' ? 'flex-end' : 'flex-start';
+    div.textContent = text;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  document.getElementById('user-input').addEventListener('keypress', e => {
+    if (e.key === 'Enter') sendMessage();
+  });
+</script>
