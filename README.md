@@ -39,6 +39,7 @@ Xatbot-1.4---Sergi-Villanueva/
 ├── README.md
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
+└── LICENSE
 
 
 ---
